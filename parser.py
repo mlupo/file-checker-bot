@@ -7,10 +7,12 @@ svg = SVG()
 
 
 def prepFile(file):
+    '''this function takes in a file and parses it with the svgelements module'''
     file = svg.parse(file)
     svg_elements = []
     for i in file.elements():
         if isinstance(i, list):
+            # sometimes the svg file contains objects in lists, so we must unpack them
             svg_elements.extend(i)
         else:
             svg_elements.append(i)
@@ -19,6 +21,7 @@ def prepFile(file):
 
 
 def errorChecker(path_list):
+    '''take the svg elements, and iterate over them to check for various issues'''
     issues = set()
     flags = {"image": "It looks like this svg file contains an image. That is okay if you are prepping this file for the print & cut, but if you are planning to use this for the laser, then it might need to be traced (converted to a vector) first.", "text": "This file contains some text. That's not bad on its own, but if our computer does not have your chosen font installed, it will not appear correctly. Consider converting your text to paths.", "stroke": 'You have a stroke width larger than 0.001". Please note that only strokes sized at 0.001" will cut, and all larger strokes will be engraved by the laser. The print & cut will always cut any stroke of any size.', "none": "Congrats, there are no obvious issue that I can see, feel free to convert this file to a pdf for printing, or ask for this file to be reviewed by staff if you want to make sure.", "no-cuts": "There are no cut lines in this file. If that was intentional then carry on, or else you may need to review your file."}
 
