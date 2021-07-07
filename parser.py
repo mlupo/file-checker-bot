@@ -14,7 +14,7 @@ def prepFile(file):
             svg_elements.extend(i)
         else:
             svg_elements.append(i)
-    # print(svg_elements)
+
     return svg_elements
 
 
