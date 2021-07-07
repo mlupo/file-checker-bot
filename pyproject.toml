@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "file-checker"
+version = "0.1.0"
+description = ""
+authors = ["Max Lupo <art@maxlupo.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+svgelements = "^1.5.4"
+Pillow = "^8.2.0"
+discord = "^1.7.3"
+python-dotenv = "^0.18.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
