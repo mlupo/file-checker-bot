@@ -37,39 +37,39 @@ def errorChecker(path_list):
 
     return issues
 
-test = prepFile("bunny.svg")
-# print(test, file=open('test.txt', 'a'))
-issues = errorChecker(test)
-print(issues)
+# test = prepFile("bunny.svg")
+# # print(test, file=open('test.txt', 'a'))
+# issues = errorChecker(test)
+# print(issues)
 
 
-# load_dotenv()
-# TOKEN = os.getenv('DISCORD_TOKEN')
-# 
-# client = discord.Client()
-# 
-# 
-# @client.event
-# async def on_ready():
-#     print('We have logged in as {0.user}'.format(client))
-# 
-# 
-# @client.event
-# async def on_message(message):
-#     if message.author == client.user:
-#         return
-# 
-#     if 'check' in message.clean_content.lower() and str(message.channel) == "auto-file-checker" and len(message.attachments) == 1:
-#         if 'svg' in message.attachments[0].filename.lower():
-#             await message.attachments[0].save("to_parse.svg")
-#             svg_contents = prepFile("to_parse.svg")
-#             msg = errorChecker(svg_contents)
-#             string = ""
-#             greeting = f"Hi {message.author.mention} I have some notes about your file:"
-#             for i in msg:
-#                 string += '\n\n' + i
-#             await message.channel.send(greeting + string)
-#         else:
-#             await message.channel.send(f"Hi {message.author.mention} something is not quite right, I wasn't able to check your file.")
-# 
-# client.run(os.getenv('TOKEN'))
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+
+client = discord.Client()
+
+
+@client.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(client))
+
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if 'check' in message.clean_content.lower() and str(message.channel) == "auto-file-checker" and len(message.attachments) == 1:
+        if 'svg' in message.attachments[0].filename.lower():
+            await message.attachments[0].save("to_parse.svg")
+            svg_contents = prepFile("to_parse.svg")
+            msg = errorChecker(svg_contents)
+            string = ""
+            greeting = f"Hi {message.author.mention} I have some notes about your file:"
+            for i in msg:
+                string += '\n\n' + i
+            await message.channel.send(greeting + string)
+        else:
+            await message.channel.send(f"Hi {message.author.mention} something is not quite right, I wasn't able to check your file.")
+
+client.run(os.getenv('TOKEN'))
