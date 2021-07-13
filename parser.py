@@ -21,43 +21,35 @@ def prepFile(file):
 def errorChecker(path_list):
     '''take the svg elements, and iterate over them to check for various issues'''
     issues = set()
-    has_stroke = False
     flags = {
         "image": "It looks like this svg file contains a bitmap image. That is okay if you are prepping this file for the print & cut, but if you are planning to use this for the laser, then it might need to be traced (converted to a vector) first.",
         "text": "This file contains some text. That's not bad on its own, but if our computer does not have your chosen font installed, it will not appear correctly. Consider converting your text to paths.",
         "stroke-width": 'You have a stroke width larger than 0.001". Please note that only strokes sized at 0.001" will cut, and all larger strokes will be engraved by the laser. The print & cut will always cut any stroke of any size.',
         "none": "Congrats, there are no obvious issue that I can see, feel free to convert this file to a pdf for printing, or ask for this file to be reviewed by staff if you want to make sure.",
-        "no-cuts": "There doesn't seem to be any stroke lines in this file, meaning that there are no cut lines for the laser OR the print & cut. If that was intentional then carry on, or else you may need to review your file."}
+        "no-cuts": "There doesn't seem to be any stroke lines in this file, meaning that there are no cut lines for the laser OR the print & cut. If that was intentional then carry on, or else you may need to review your file.",  # not implemented
+        "tiny-stroke": 'You have a stroke width larger than 0.001". Please note that only strokes sized at 0.001" will cut, and all larger strokes will be engraved by the laser. The print & cut will always cut any stroke of any size.'}
 
     for element in path_list:
         if isinstance(element, SVGText):
             issues.add(flags["text"])
-            if element.stroke != Color(None):
-                # by checking to see if a stroke has the colour of 'None' we can try to
-                # help the patron check if there are no cut lines at all in their file
-                has_stroke = True
-        elif isinstance(element, Path) or isinstance(element, Shape):
-            if element.stroke_width > 0.095 and element.stroke != Color(None):
+        if isinstance(element, Path) or isinstance(element, Shape) or isinstance(element, SVGText):
+            if element.stroke_width >= 0.95 and element.stroke != Color(None):
                 issues.add(flags["stroke-width"])
-                has_stroke = True
-            if element.stroke_width < 0.095 and element.stroke != Color(None):
-                # a stroke line less than 0.095px is probably a cut line
-                has_stroke = True
-        elif isinstance(element, SVGImage):
+            if element.stroke_width < 0.092 and element.stroke != Color(None):
+                # a stroke line less than 0.092px is probably a mistake
+                issues.add(flags["tiny-stroke"])
+        if isinstance(element, SVGImage):
             issues.add(flags["image"])
-
-    if not has_stroke:
-        issues.add(flags["no-cuts"])
 
     if len(issues) < 1:
         issues.add(flags["none"])
 
     return issues
 
-# test = prepFile("test.svg")
-# # print(test, file=open('test.txt', 'a'))
-# issues = errorChecker(test)
-# print(issues)
+test = prepFile("large-template_with_insert.svg")
+# print(test, file=open('test.txt', 'a'))
+issues = errorChecker(test)
+print(issues)
 
 
 load_dotenv()
