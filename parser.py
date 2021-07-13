@@ -46,10 +46,10 @@ def errorChecker(path_list):
 
     return issues
 
-test = prepFile("large-template_with_insert.svg")
-# print(test, file=open('test.txt', 'a'))
-issues = errorChecker(test)
-print(issues)
+# test = prepFile("large-template_with_insert.svg")
+# # print(test, file=open('test.txt', 'a'))
+# issues = errorChecker(test)
+# print(issues)
 
 
 load_dotenv()
