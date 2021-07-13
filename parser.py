@@ -27,13 +27,13 @@ def errorChecker(path_list):
         "stroke-width": 'You have a stroke width larger than 0.001". Please note that only strokes sized at 0.001" will cut, and all larger strokes will be engraved by the laser. The print & cut will always cut any stroke of any size.',
         "none": "Congrats, there are no obvious issue that I can see, feel free to convert this file to a pdf for printing, or ask for this file to be reviewed by staff if you want to make sure.",
         "no-cuts": "There doesn't seem to be any stroke lines in this file, meaning that there are no cut lines for the laser OR the print & cut. If that was intentional then carry on, or else you may need to review your file.",  # not implemented
-        "tiny-stroke": 'You have a stroke width larger than 0.001". Please note that only strokes sized at 0.001" will cut, and all larger strokes will be engraved by the laser. The print & cut will always cut any stroke of any size.'}
+        "tiny-stroke": 'There is a stroke line that is less than 0.001 inches. A line this thin may cut with the print & cut, but will not be recognized by the laser.'}
 
     for element in path_list:
         if isinstance(element, SVGText):
             issues.add(flags["text"])
         if isinstance(element, Path) or isinstance(element, Shape) or isinstance(element, SVGText):
-            if element.stroke_width >= 0.95 and element.stroke != Color(None):
+            if element.stroke_width > 0.095 and element.stroke != Color(None):
                 issues.add(flags["stroke-width"])
             if element.stroke_width < 0.092 and element.stroke != Color(None):
                 # a stroke line less than 0.092px is probably a mistake
@@ -46,7 +46,7 @@ def errorChecker(path_list):
 
     return issues
 
-# test = prepFile("large-template_with_insert.svg")
+# test = prepFile("SmashingBojo.svg")
 # # print(test, file=open('test.txt', 'a'))
 # issues = errorChecker(test)
 # print(issues)
